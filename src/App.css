@@ -1,124 +1,73 @@
-/* Скидаємо стилі та робимо full screen */
-
-*,
-*::before,
-*::after {
+body, html, #root {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  height: 100%;
-  width: 100%;
+  height: 100vh;
   overflow: hidden;
   background: black;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-  Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: sans-serif;
   color: white;
 }
 
 .viewport {
-  height: 100vh;
-  width: 100vw;
   position: relative;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
-  touch-action: none; /* Щоб свайпи працювали коректно */
-  user-select: none;
   background: black;
+}
+
+.video-slide {
   display: flex;
   justify-content: center;
   align-items: center;
+  will-change: transform;
 }
 
 .video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: auto;
+  width: 100vw;
   height: 100vh;
-  min-width: 100vw;
-  min-height: 100vh;
-  transform: translate(-50%, -50%);
   object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: black;
   z-index: 1;
-  transition: opacity 0.6s ease-in-out;
-  opacity: 0;
-  pointer-events: none;
-  user-select: none;
 }
-
-.video.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 
 .video-overlay {
   position: absolute;
   bottom: 40px;
   left: 20px;
   right: 20px;
-  z-index: 10;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+  color: white;
   pointer-events: none;
-  user-select: none;
 }
 
 .video-info {
   max-width: 70%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 16px;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
+  pointer-events: auto;
 }
 
-.video-info .author {
-  font-weight: 700;
-  font-size: 20px;
+.author {
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
-.video-info .description {
-  font-weight: 400;
-}
-
-.video-info .music {
-  font-weight: 400;
-  font-style: italic;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.description,
+.music {
+  margin-bottom: 4px;
+  font-size: 0.9rem;
 }
 
 .video-actions {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  font-size: 22px;
-  font-weight: 600;
-  user-select: none;
-  pointer-events: auto;
   align-items: center;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
-}
-
-.video-actions > div {
-  cursor: pointer;
-  user-select: none;
-}
-
-/* Для мобільних - зайняти весь екран */
-@media (max-width: 768px) {
-  .video-info {
-    font-size: 14px;
-    max-width: 65%;
-  }
-  .video-actions {
-    font-size: 20px;
-    gap: 15px;
-  }
+  gap: 12px;
+  font-size: 1.2rem;
+  pointer-events: auto;
 }

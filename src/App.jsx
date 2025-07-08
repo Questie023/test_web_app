@@ -1,17 +1,4 @@
-<<<<<<< HEAD
-export default function App() {
-    return (
-        <div style={{ height: "100vh", backgroundColor: "black" }}>
-            <video
-                src="https://storage.coverr.co/videos/coverr-woman-smiling-and-taking-a-selfie-1630/1080p.mp4"
-                muted
-                autoPlay
-                loop
-                playsInline
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-=======
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const videos = [
     {
@@ -50,49 +37,41 @@ const videos = [
 
 export default function App() {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const containerRef = useRef(null);
     const isScrolling = useRef(false);
+    const containerRef = useRef(null);
+    const videosCount = videos.length;
 
-    // Плавний перехід на наступне/попереднє відео
-    const scrollHandler = (e) => {
-        e.preventDefault();
+    const scrollTo = (direction) => {
         if (isScrolling.current) return;
         isScrolling.current = true;
 
-        if (e.deltaY > 0) {
-            // вниз
-            setCurrentIndex((i) => (i + 1) % videos.length);
-        } else {
-            // вверх
-            setCurrentIndex((i) => (i - 1 + videos.length) % videos.length);
-        }
+        setCurrentIndex((i) =>
+            (i + direction + videosCount) % videosCount
+        );
 
         setTimeout(() => {
             isScrolling.current = false;
         }, 600);
     };
 
-    // Обробка свайпів (мобільні)
-    useEffect(() => {
-        let touchStartY = 0;
-        let touchEndY = 0;
+    const handleWheel = (e) => {
+        e.preventDefault();
+        scrollTo(e.deltaY > 0 ? 1 : -1);
+    };
 
-        function onTouchStart(e) {
-            touchStartY = e.changedTouches[0].screenY;
-        }
-        function onTouchEnd(e) {
-            touchEndY = e.changedTouches[0].screenY;
-            if (isScrolling.current) return;
-            if (touchStartY - touchEndY > 30) {
-                isScrolling.current = true;
-                setCurrentIndex((i) => (i + 1) % videos.length);
-                setTimeout(() => (isScrolling.current = false), 600);
-            } else if (touchEndY - touchStartY > 30) {
-                isScrolling.current = true;
-                setCurrentIndex((i) => (i - 1 + videos.length) % videos.length);
-                setTimeout(() => (isScrolling.current = false), 600);
+    useEffect(() => {
+        let startY = 0;
+
+        const onTouchStart = (e) => {
+            startY = e.touches[0].screenY;
+        };
+
+        const onTouchEnd = (e) => {
+            const deltaY = startY - e.changedTouches[0].screenY;
+            if (Math.abs(deltaY) > 30) {
+                scrollTo(deltaY > 0 ? 1 : -1);
             }
-        }
+        };
 
         const el = containerRef.current;
         el.addEventListener("touchstart", onTouchStart);
@@ -102,35 +81,34 @@ export default function App() {
             el.removeEventListener("touchstart", onTouchStart);
             el.removeEventListener("touchend", onTouchEnd);
         };
-    }, []);
+    }, [videosCount]);
+
+    const getIndex = (offset) =>
+        (currentIndex + offset + videosCount) % videosCount;
 
     return (
         <div
             ref={containerRef}
-            onWheel={scrollHandler}
             className="viewport"
+            onWheel={handleWheel}
             tabIndex={0}
         >
-            {videos.map((video, i) => {
-                // Визначаємо позицію відео для анімації
-                let pos = (i - currentIndex) * 100;
-                if (pos < -100) pos += videos.length * 100;
-                if (pos > (videos.length - 1) * 100) pos -= videos.length * 100;
-
+            {[-1, 0, 1].map((pos) => {
+                const video = videos[getIndex(pos)];
                 return (
                     <div
                         key={video.src}
                         className="video-slide"
                         style={{
-                            transform: `translateY(${pos}vh)`,
+                            transform: `translateY(${pos * 100}vh)`,
                             transition: "transform 0.6s ease",
+                            zIndex: pos === 0 ? 10 : 1,
                             position: "absolute",
                             top: 0,
                             left: 0,
                             width: "100vw",
                             height: "100vh",
                             overflow: "hidden",
-                            zIndex: i === currentIndex ? 10 : 1,
                         }}
                     >
                         <video
@@ -157,7 +135,6 @@ export default function App() {
                     </div>
                 );
             })}
->>>>>>> 2be0a5fcff80b5774ebdf5840482a415a36a882c
         </div>
     );
 }
