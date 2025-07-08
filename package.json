@@ -1,16 +1,7 @@
 {
-<<<<<<< HEAD
-  "name": "untitled",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "private": true
-=======
   "name": "swipe-video-flicks",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -21,8 +12,6 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "vite": "^4.0.0",
-    "@vitejs/plugin-react": "^3.0.0"
+    "vite": "^4.0.0"
   }
->>>>>>> 2be0a5fcff80b5774ebdf5840482a415a36a882c
 }
